@@ -20,7 +20,7 @@ public class DeviceService {
 @Autowired
 private EmployeeService es;
     public Page<Device> getDeviceList(int page, int size, String sortBy){
-        if(size > 100) size = 100;
+        if(size > 50) size = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.dd.findAll(pageable);
     }

@@ -12,12 +12,10 @@ public record NewDeviceDTO(@NotEmpty(message = "device type required")
     public String type() {
         return type;
     }
-
     @Override
     public String deviceStatus() {
         return deviceStatus;
     }
-
     @Override
     public UUID employeeId() {
         return employeeId;

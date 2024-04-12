@@ -25,7 +25,7 @@ public class EmployeeService {
     private Cloudinary cloudinaryUploader;
 
     public Page<Employee> getEmployeeList(int page, int size, String sortBy){
-        if(size > 100) size = 100;
+        if(size > 50) size = 50;
         Pageable pageable = PageRequest.of(page,size, Sort.by(sortBy));
         return this.ed.findAll(pageable);
     }
