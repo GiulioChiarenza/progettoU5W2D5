@@ -1,6 +1,7 @@
 package giuliochiarenza.progettoU5W2D5.exceptions;
 
 import giuliochiarenza.progettoU5W2D5.payloads.ErrorsPayload;
+import giuliochiarenza.progettoU5W2D5.payloads.ErrorsResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,5 +33,10 @@ public class ExceptionsHandler {
     public ErrorsPayload handleGenericErrors(Exception ex){
         ex.printStackTrace();
         return new ErrorsPayload("server side problem", LocalDateTime.now());
+    }
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+    public ErrorsResponseDTO handleUnauthorized(UnauthorizedException ex){
+        return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 }

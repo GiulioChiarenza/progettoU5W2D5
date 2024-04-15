@@ -30,7 +30,7 @@ public class EmployeeService {
         return this.ed.findAll(pageable);
     }
     public Employee saveEmployee(NewEmployeeDTO body){
-        Employee newEmployee= new Employee(body.username(),body.name(),body.surname(),body.email(),"https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname());
+        Employee newEmployee= new Employee(body.username(),body.name(),body.surname(),body.email(),body.password(),"https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname());
         return ed.save(newEmployee);
     }
     public Employee findById(UUID employeeId){
@@ -52,5 +52,8 @@ public class EmployeeService {
     public String uploadImage(MultipartFile image) throws IOException {
         String url = (String) cloudinaryUploader.uploader().upload(image.getBytes(), ObjectUtils.emptyMap()).get("url");
         return url;
+    }
+    public Employee findByEmail(String email) {
+        return ed.findByEmail(email).orElseThrow(()-> new NotFoundException("l'employee con email" + email + " non trovato"));
     }
 }
