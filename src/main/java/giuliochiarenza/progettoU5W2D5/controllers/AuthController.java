@@ -27,7 +27,7 @@ public class AuthController {
     }
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewEmployeeRespDTO saveUser(@RequestBody @Validated NewEmployeeDTO body, BindingResult validation){
+    public NewEmployeeRespDTO saveEmployee(@RequestBody @Validated NewEmployeeDTO body, BindingResult validation){
         if(validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         }

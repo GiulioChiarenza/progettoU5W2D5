@@ -1,24 +1,31 @@
 package giuliochiarenza.progettoU5W2D5.security;
 
+import giuliochiarenza.progettoU5W2D5.entities.Employee;
 import giuliochiarenza.progettoU5W2D5.exceptions.UnauthorizedException;
+import giuliochiarenza.progettoU5W2D5.services.EmployeeService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTTools jwtTools;
-
+    @Autowired
+    private EmployeeService es;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,6 +43,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 3. Verifichiamo se il token è stato manipolato (verifica della signature) e se non è scaduto (verifica Expiration Date)
         jwtTools.verifyToken(accessToken);
+        String id = jwtTools.extractIdFromToken(accessToken);
+        Employee currentEmployee = this.es.findById(UUID.fromString(id));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(currentEmployee, null, currentEmployee.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 4. Se tutto è OK andiamo al prossimo elemento della Filter Chain, per prima o poi arrivare all'endpoint
         filterChain.doFilter(request, response); // Vado al prossimo elemento della catena, passandogli gli oggetti request e response
